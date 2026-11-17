@@ -1,0 +1,149 @@
+{
+  "info": {
+    "_postman_id": "71d9b40a-0458-4557-8f31-cc04cc1f9442",
+    "name": "Student Management System API",
+    "description": "Repeatable CRUD checks for the Student Management System API. The create request generates a unique email and stores its MongoDB ObjectId for the following requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "studentId", "value": "" },
+    { "key": "createdEmail", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "POST - Create Student",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Newman API Test\",\n  \"email\": \"newman-{{$guid}}@example.com\",\n  \"course\": \"Newman API Verification\",\n  \"age\": 20\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "{{baseUrl}}/api/students"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const student = pm.response.json();",
+              "if (student && student._id) {",
+              "  pm.collectionVariables.set('studentId', student._id);",
+              "  pm.collectionVariables.set('createdEmail', student.email);",
+              "}",
+              "pm.test('returns HTTP 201 Created', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "pm.test('creates a student with a MongoDB ObjectId', function () {",
+              "  pm.expect(student._id).to.match(/^[a-f0-9]{24}$/i);",
+              "  pm.expect(student.email).to.match(/^newman-[a-f0-9-]+@example\\.com$/i);",
+              "  pm.expect(student.name).to.eql('Newman API Test');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET - List Students",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/students" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const students = pm.response.json();",
+              "pm.test('returns HTTP 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('list contains the student created by this run', function () {",
+              "  pm.expect(students).to.be.an('array');",
+              "  pm.expect(students.some(function (student) { return student._id === pm.collectionVariables.get('studentId'); })).to.be.true;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET - Get Student by ID",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/students/{{studentId}}" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const student = pm.response.json();",
+              "pm.test('returns HTTP 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('returns the student created by this run', function () {",
+              "  pm.expect(student._id).to.eql(pm.collectionVariables.get('studentId'));",
+              "  pm.expect(student.email).to.eql(pm.collectionVariables.get('createdEmail'));",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PUT - Update Student",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Newman API Test Updated\",\n  \"email\": \"{{createdEmail}}\",\n  \"course\": \"Software Engineering\",\n  \"age\": 21\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": "{{baseUrl}}/api/students/{{studentId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const student = pm.response.json();",
+              "pm.test('returns HTTP 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('returns the updated student fields', function () {",
+              "  pm.expect(student._id).to.eql(pm.collectionVariables.get('studentId'));",
+              "  pm.expect(student.name).to.eql('Newman API Test Updated');",
+              "  pm.expect(student.course).to.eql('Software Engineering');",
+              "  pm.expect(student.age).to.eql(21);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "DELETE - Delete Student",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/students/{{studentId}}" },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const result = pm.response.json();",
+              "pm.test('returns HTTP 200 OK', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "pm.test('deletes the student created by this run', function () {",
+              "  pm.expect(result.student._id).to.eql(pm.collectionVariables.get('studentId'));",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

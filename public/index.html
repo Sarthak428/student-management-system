@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fb">
+    <meta name="description" content="A simple dashboard for managing student records.">
+    <title>Students | Campus Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/script.js" defer></script>
+  </head>
+  <body>
+    <nav class="navbar app-navbar">
+      <div class="container-fluid page-shell">
+        <a class="brand" href="/" aria-label="Campus Desk home">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <span>campus<span class="brand-light">desk</span></span>
+        </a>
+        <div class="nav-caption"><span class="live-dot"></span> Student directory</div>
+      </div>
+    </nav>
+
+    <main class="container-fluid page-shell dashboard">
+      <header class="page-heading">
+        <div>
+          <p class="eyebrow">ACADEMIC ADMINISTRATION</p>
+          <h1>Student directory</h1>
+          <p class="heading-copy">A clear view of your students, all in one place.</p>
+        </div>
+        <div class="academic-pill"><span aria-hidden="true">✦</span> Student management</div>
+      </header>
+
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+      <section class="summary-grid" aria-label="Directory summary">
+        <article class="summary-card">
+          <div class="summary-icon students-icon" aria-hidden="true">♧</div>
+          <div><p>Total students</p><strong id="student-count">—</strong></div>
+          <span class="summary-note">in your directory</span>
+        </article>
+        <article class="summary-card">
+          <div class="summary-icon course-icon" aria-hidden="true">▤</div>
+          <div><p>Courses represented</p><strong id="course-count">—</strong></div>
+          <span class="summary-note">unique courses</span>
+        </article>
+        <article class="summary-card">
+          <div class="summary-icon recent-icon" aria-hidden="true">◷</div>
+          <div><p>Recently added</p><strong id="recent-count">—</strong></div>
+          <span class="summary-note">last 7 days</span>
+        </article>
+      </section>
+
+      <section class="workspace-grid">
+        <aside class="panel form-panel" aria-labelledby="form-title">
+          <div class="panel-heading">
+            <div class="section-icon" aria-hidden="true">＋</div>
+            <div>
+              <p class="eyebrow">DIRECTORY</p>
+              <h2 id="form-title">Add a student</h2>
+            </div>
+          </div>
+          <p class="panel-description">Fill in the details below to add someone new.</p>
+
+          <form id="student-form" novalidate>
+            <input id="student-id" type="hidden">
+            <label for="name" class="form-label">Full name <span>*</span></label>
+            <input class="form-control" id="name" name="name" type="text" maxlength="100" placeholder="e.g. Rahul Sharma" required>
+
+            <label for="email" class="form-label">Email address <span>*</span></label>
+            <input class="form-control" id="email" name="email" type="email" maxlength="254" placeholder="student@example.com" required>
+
+            <label for="course" class="form-label">Course <span>*</span></label>
+            <input class="form-control" id="course" name="course" type="text" maxlength="120" placeholder="e.g. Computer Engineering" required>
+
+            <label for="age" class="form-label">Age <span>*</span></label>
+            <div class="input-suffix">
+              <input class="form-control" id="age" name="age" type="number" min="1" max="120" step="1" placeholder="e.g. 20" required>
+              <span>years</span>
+            </div>
+
+            <div class="form-actions">
+              <button id="submit-button" class="btn btn-primary submit-button" type="submit">Add student <span aria-hidden="true">↗</span></button>
+              <button id="cancel-edit" class="btn btn-light cancel-button" type="button" hidden>Cancel</button>
+            </div>
+          </form>
+          <p class="form-footnote"><span aria-hidden="true">⌑</span> Student details are securely stored in your database.</p>
+        </aside>
+
+        <section class="panel directory-panel" aria-labelledby="directory-title">
+          <div class="directory-header">
+            <div>
+              <p class="eyebrow">ALL RECORDS</p>
+              <h2 id="directory-title">Your students <span id="visible-count" class="count-badge">0</span></h2>
+            </div>
+            <label class="search-box" for="search">
+              <span aria-hidden="true">⌕</span>
+              <input id="search" type="search" placeholder="Search name or ID..." autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table student-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">STUDENT</th>
+                  <th scope="col">COURSE</th>
+                  <th scope="col">AGE</th>
+                  <th scope="col">ADDED</th>
+                  <th scope="col"><span class="visually-hidden">Actions</span></th>
+                </tr>
+              </thead>
+              <tbody id="student-list">
+                <tr><td class="table-message" colspan="5">Loading students...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-footer"><span id="table-caption">Showing 0 students</span><span class="footer-status"><span class="live-dot"></span> Live directory</span></div>
+        </section>
+      </section>
+
+      <footer class="page-footer"><span>Campus Desk <span id="current-year"></span></span><span>Simple tools for a thriving campus.</span></footer>
+    </main>
+
+    <dialog id="details-dialog" class="details-dialog">
+      <form method="dialog"><button class="dialog-close" aria-label="Close">×</button></form>
+      <p class="eyebrow">STUDENT PROFILE</p>
+      <h2 id="details-name"></h2>
+      <dl class="details-list">
+        <div><dt>Email</dt><dd id="details-email"></dd></div>
+        <div><dt>Course</dt><dd id="details-course"></dd></div>
+        <div><dt>Age</dt><dd id="details-age"></dd></div>
+        <div><dt>Student ID</dt><dd id="details-id" class="id-value"></dd></div>
+        <div><dt>Added</dt><dd id="details-date"></dd></div>
+      </dl>
+    </dialog>
+  </body>
+</html>

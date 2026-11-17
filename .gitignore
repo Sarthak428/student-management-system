@@ -1,0 +1,9 @@
+node_modules/
+.env
+npm-debug.log*
+coverage/
+.DS_Store
+.postman/
+postman/collections/
+postman/environments/
+postman/globals/

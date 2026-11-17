@@ -1,0 +1,108 @@
+{
+  "collection": "Student Management System API",
+  "startedAt": "2026-11-17T17:16:42.419Z",
+  "finishedAt": "2026-11-17T17:16:43.121Z",
+  "baseUrl": "http://localhost:3000",
+  "totalRequests": 5,
+  "passedRequests": 5,
+  "failedRequests": 0,
+  "result": "PASS",
+  "requests": [
+    {
+      "name": "POST - Create Student",
+      "method": "POST",
+      "statusCode": 201,
+      "status": "Created",
+      "result": "PASS",
+      "assertions": [
+        {
+          "name": "returns HTTP 201 Created",
+          "passed": true,
+          "error": null
+        },
+        {
+          "name": "creates a student with a MongoDB ObjectId",
+          "passed": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "GET - List Students",
+      "method": "GET",
+      "statusCode": 200,
+      "status": "OK",
+      "result": "PASS",
+      "assertions": [
+        {
+          "name": "returns HTTP 200 OK",
+          "passed": true,
+          "error": null
+        },
+        {
+          "name": "list contains the student created by this run",
+          "passed": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "GET - Get Student by ID",
+      "method": "GET",
+      "statusCode": 200,
+      "status": "OK",
+      "result": "PASS",
+      "assertions": [
+        {
+          "name": "returns HTTP 200 OK",
+          "passed": true,
+          "error": null
+        },
+        {
+          "name": "returns the student created by this run",
+          "passed": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "PUT - Update Student",
+      "method": "PUT",
+      "statusCode": 200,
+      "status": "OK",
+      "result": "PASS",
+      "assertions": [
+        {
+          "name": "returns HTTP 200 OK",
+          "passed": true,
+          "error": null
+        },
+        {
+          "name": "returns the updated student fields",
+          "passed": true,
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "DELETE - Delete Student",
+      "method": "DELETE",
+      "statusCode": 200,
+      "status": "OK",
+      "result": "PASS",
+      "assertions": [
+        {
+          "name": "returns HTTP 200 OK",
+          "passed": true,
+          "error": null
+        },
+        {
+          "name": "deletes the student created by this run",
+          "passed": true,
+          "error": null
+        }
+      ]
+    }
+  ],
+  "failures": []
+}
